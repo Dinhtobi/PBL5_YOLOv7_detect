@@ -5,10 +5,7 @@ import os
 import subprocess
 from subprocess import Popen
 import glob
-import io
-import base64
-from io import BytesIO
-from PIL import Image
+
 #Khởi tạo Flask Server Backend
 app = Flask(__name__)
 
@@ -50,7 +47,7 @@ def predict_video_YOLOv7_proces():
        path_file =  save_video(file)
     elif duoi == "jpg":
        path_file =  save_image(file)
-    process = subprocess.Popen([os.getcwd() + "\.venv\Scripts\python", 'detect.py','--weights','last.pt', '--source',path_file ])
+    process = subprocess.Popen([os.getcwd() + "\.venv\Scripts\python", 'detect.py','--weights','last.pt', '--conf-thres','0.7','--source',path_file ,'--name','Hoang'])
     process.wait()
     return "success"
 
