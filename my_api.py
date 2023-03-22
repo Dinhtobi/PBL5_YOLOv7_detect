@@ -2,10 +2,8 @@ from flask import Flask ,render_template
 from flask import request
 from flask_cors import CORS , cross_origin 
 import os
-import subprocess
-from subprocess import Popen
 import glob
-
+import myYolov7
 #Khởi tạo Flask Server Backend
 app = Flask(__name__)
 
@@ -13,6 +11,8 @@ app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS']  ='Content-Type'
 app.config['UPLOAD_FOLDER'] = "static"
+
+model = myYolov7.my_yolov7('last.pt','cpu',0.6)
 
 def save_image(image):
     folder_path = "test_image"
@@ -47,8 +47,11 @@ def predict_video_YOLOv7_proces():
        path_file =  save_video(file)
     elif duoi == "jpg":
        path_file =  save_image(file)
-    process = subprocess.Popen([os.getcwd() + "\.venv\Scripts\python", 'detect.py','--weights','last.pt', '--conf-thres','0.7','--source',path_file ,'--name','Hoang'])
-    process.wait()
+    imgs = path_file 
+    listfile = os.listdir('test_image')
+    count = len(listfile)
+    savepath = 'output_img/image.jpg'
+    model.detect(imgs,savepath,count)
     return "success"
 
 
